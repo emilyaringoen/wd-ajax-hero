@@ -76,9 +76,11 @@
         // what to do if code works
         success: function(data) {
 
+          // use for loop to create unique obj for each movie
           for (let movie of data.Search) {
             let uniqueId = movie.imdbID
 
+            // another ajax call to access movie plot using imdbID
             $.ajax({
               method: 'GET',
               url: `http://omdbapi.com/?i=${uniqueId}`,
@@ -91,6 +93,7 @@
                   id: data2.imdbID,
                   plot: data2.Plot
                 })
+                console.log(movies)
                 renderMovies()
               },
 
@@ -100,8 +103,6 @@
               }
             })
           }
-
-
           renderMovies()
         },
 
