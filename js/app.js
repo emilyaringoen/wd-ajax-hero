@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  const movies = [];
+  let movies = [];
 
   const renderMovies = function() {
     $('#listings').empty();
@@ -17,7 +17,9 @@
         'data-tooltip': movie.title
       });
 
-      $title.tooltip({ delay: 50 }).text(movie.title);
+      $title.tooltip({
+        delay: 50
+      }).text(movie.title);
 
       const $poster = $('<img>').addClass('poster');
 
@@ -55,6 +57,49 @@
       $('.modal-trigger').leanModal();
     }
   };
+  $('button').click(function() {
+    let userSearch = $('input').val()
 
-  // ADD YOUR CODE HERE
+    movies = []
+    if (userSearch !== '') {
+      $.ajax({
+
+        // method for the HTTP request
+        method: 'GET',
+
+        // url where the data lives
+        url: `http://omdbapi.com/?s=${userSearch}`,
+
+        // the format of data to recieve
+        dataType: 'json',
+
+        // what to do if code works
+        success: function(data) {
+
+          for (let movie of data.Search) {
+            movies.push({
+              title: movie.Title,
+              year: movie.Year,
+              poster: movie.Poster,
+              id: movie.imdbID
+            })
+          }
+          renderMovies()
+        },
+
+        // what to do if code doesn't work
+        error: function() {
+          console.log('uh oh something went wrong')
+        }
+      })
+    }
+  });
+
+  $('#listings').click(function(){
+    if ($(event.target).text('Plot Synopsis')) {
+      let uniqueId = $(event.target).attr('href')
+      
+      console.log(uniqueId)
+    }
+  })
 })();
