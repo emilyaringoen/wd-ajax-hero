@@ -63,24 +63,12 @@
     movies = []
     if (userSearch !== '') {
       $.ajax({
-
-        // method for the HTTP request
         method: 'GET',
-
-        // url where the data lives
         url: `http://omdbapi.com/?s=${userSearch}`,
-
-        // the format of data to recieve
         dataType: 'json',
-
-        // what to do if code works
         success: function(data) {
-
-          // use for loop to create unique obj for each movie
           for (let movie of data.Search) {
             let uniqueId = movie.imdbID
-
-            // another ajax call to access movie plot using imdbID
             $.ajax({
               method: 'GET',
               url: `http://omdbapi.com/?i=${uniqueId}`,
