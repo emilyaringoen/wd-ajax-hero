@@ -77,13 +77,31 @@
         success: function(data) {
 
           for (let movie of data.Search) {
-            movies.push({
-              title: movie.Title,
-              year: movie.Year,
-              poster: movie.Poster,
-              id: movie.imdbID
+            let uniqueId = movie.imdbID
+
+            $.ajax({
+              method: 'GET',
+              url: `http://omdbapi.com/?i=${uniqueId}`,
+              dataType: 'json',
+              success: function(data2) {
+                movies.push({
+                  title: data2.Title,
+                  year: data2.Year,
+                  poster: data2.Poster,
+                  id: data2.imdbID,
+                  plot: data2.Plot
+                })
+                renderMovies()
+              },
+
+              // what to do if code doesn't work
+              error: function() {
+                console.log('uh oh something went wrong')
+              }
             })
           }
+
+
           renderMovies()
         },
 
@@ -94,12 +112,4 @@
       })
     }
   });
-
-  $('#listings').click(function(){
-    if ($(event.target).text('Plot Synopsis')) {
-      let uniqueId = $(event.target).attr('href')
-      
-      console.log(uniqueId)
-    }
-  })
 })();
