@@ -57,7 +57,30 @@
       $('.modal-trigger').leanModal();
     }
   };
+
+  function createMovie(uniqueId) {
+    $.ajax({
+      method: 'GET',
+      url: `http://omdbapi.com/?i=${uniqueId}`,
+      dataType: 'json',
+      success: function(data2) {
+        movies.push({
+          title: data2.Title,
+          year: data2.Year,
+          poster: data2.Poster,
+          id: data2.imdbID,
+          plot: data2.Plot
+        })
+        renderMovies()
+      },
+      error: function() {
+        console.log('uh oh something went wrong')
+      }
+    })
+  }
+
   $('button').click(function() {
+
     let userSearch = $('input').val()
 
     movies = []
@@ -69,27 +92,7 @@
         success: function(data) {
           for (let movie of data.Search) {
             let uniqueId = movie.imdbID
-            $.ajax({
-              method: 'GET',
-              url: `http://omdbapi.com/?i=${uniqueId}`,
-              dataType: 'json',
-              success: function(data2) {
-                movies.push({
-                  title: data2.Title,
-                  year: data2.Year,
-                  poster: data2.Poster,
-                  id: data2.imdbID,
-                  plot: data2.Plot
-                })
-                console.log(movies)
-                renderMovies()
-              },
-
-              // what to do if code doesn't work
-              error: function() {
-                console.log('uh oh something went wrong')
-              }
-            })
+            createMovie(uniqueId)
           }
           renderMovies()
         },
